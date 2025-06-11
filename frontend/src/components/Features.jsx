@@ -1,38 +1,72 @@
-import React from 'react'
+import React from 'react';
+import {
+  SparklesIcon,
+  EyeIcon,
+  AdjustmentsHorizontalIcon,
+  ArrowUpIcon,
+  CheckBadgeIcon,
+  LockClosedIcon,
+} from '@heroicons/react/24/outline';
+
+const features = [
+  {
+    title: 'Smart Image Enhancement',
+    icon: <SparklesIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Automatically improves photo quality with AI—making them clearer, sharper, and more vibrant in one click.',
+  },
+  {
+    title: 'Before & After Comparison',
+    icon: <EyeIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Instantly view the transformation. See your original and enhanced images side by side.',
+  },
+  {
+    title: 'Natural Color Boosting',
+    icon: <AdjustmentsHorizontalIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Enhances colors without oversaturation—keeping your images realistic yet stunning.',
+  },
+  {
+    title: 'Super-Resolution Upscaling',
+    icon: <ArrowUpIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Turn low-res images into crisp, high-quality versions. Perfect for prints or HD sharing.',
+  },
+  {
+    title: 'One-Click Simplicity',
+    icon: <CheckBadgeIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Upload and go. No editing skills required—just fast, flawless results.',
+  },
+  {
+    title: 'Safe & Private',
+    icon: <LockClosedIcon className="h-10 w-10 text-fuchsia-600" />,
+    text: 'Your photos stay private. All processing is secure and nothing is stored.',
+  },
+];
 
 const Features = () => {
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-100 to-blue-50 backdrop-blur-md">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl font-bold text-blue-900 text-center mb-8">
-          Powerful Features of <span className="text-blue-600">PixelPolish</span>
+    <section className="py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-white to-fuchsia-100">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-5xl font-extrabold text-violet-900 text-center mb-6 leading-tight">
+          Features That Make <span className="text-fuchsia-600">PixelPolish</span> Shine
         </h2>
-        <p className="text-lg text-gray-700 text-center mb-10 max-w-2xl mx-auto">
-          Elevate your photos with tools designed for simplicity and professional results.
+        <p className="text-lg text-gray-700 text-center mb-16 max-w-2xl mx-auto">
+          Experience stunning photo transformations in seconds—powered by intelligent AI designed for everyday users.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300">
-            <h3 className="text-xl font-semibold text-blue-600 mb-3">AI-Powered Enhancement</h3>
-            <p className="text-gray-700">
-              Automatically adjust lighting, sharpness, and colors to make your photos look professional in seconds.
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300">
-            <h3 className="text-xl font-semibold text-blue-600 mb-3">One-Click Editing</h3>
-            <p className="text-gray-700">
-              No experience needed—enhance your images with a single click using our intuitive tools.
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300">
-            <h3 className="text-xl font-semibold text-blue-600 mb-3">Avatar Creation</h3>
-            <p className="text-gray-700">
-              Turn your photos into personalized avatars with AI-driven styles and effects.
-            </p>
-          </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-white bg-opacity-80 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition duration-300 ease-in-out text-center flex flex-col items-center"
+            >
+              <div className="mb-4">{feature.icon}</div>
+              <h3 className="text-2xl font-semibold text-violet-800 mb-3">{feature.title}</h3>
+              <p className="text-gray-700 leading-relaxed">{feature.text}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Features
+export default Features;
