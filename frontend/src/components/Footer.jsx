@@ -131,7 +131,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
           </h4>
           <div className="flex space-x-3 sm:space-x-4 mb-3 sm:mb-4">
             <a
-              href="https://twitter.com/pixelpolish"
+              href="https://twitter.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-fuchsia-400 transition text-xl sm:text-2xl"
@@ -139,7 +139,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
               <i className="ri-twitter-x-line"></i>
             </a>
             <a
-              href="https://instagram.com/pixelpolish"
+              href="https://instagram.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-fuchsia-400 transition text-xl sm:text-2xl"
@@ -147,7 +147,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
               <i className="ri-instagram-line"></i>
             </a>
             <a
-              href="https://linkedin.com/pixelpolish"
+              href="https://www.linkedin.com/in/adityarajsrv/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-fuchsia-400 transition text-xl sm:text-2xl"
@@ -158,8 +158,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
           <p className="text-gray-300 text-xs sm:text-sm mb-2">
             Email:{" "}
             <a
-              href="mailto:support@pixelpolish.com"
-              className="hover:text-fuchsia-400 underline transition"
+              className="hover:text-fuchsia-400 transition"
             >
               support@pixelpolish.com
             </a>
