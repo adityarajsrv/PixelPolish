@@ -52,7 +52,7 @@ PixelPolish aims to make professional image enhancement accessible to everyone v
 
 ## Tech Stack
 
-### ⚙️ Backend
+### Backend
 - **Node.js** with **Express.js** for API and Python integration
 - **Python** for running enhancement models
 - **child_process.execFile** to bridge Node ↔ Python
@@ -75,6 +75,8 @@ PixelPolish aims to make professional image enhancement accessible to everyone v
 5. Enhanced image is returned to frontend
 6. User previews & downloads result
 
-Connect
+## 🌐 Connect
+
 🌟 Star this repo to support the project
-🔗 LinkedIn: https://www.linkedin.com/in/adityarajsrv/
+🔗 LinkedIn: [https://www.linkedin.com/in/adityarajsrv/](https://www.linkedin.com/in/adityarajsrv/)
+
