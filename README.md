@@ -1,31 +1,12 @@
-# 🖼️ PixelPolish — AI Image Enhancer
+# PixelPolish — Image Enhancer
 
 PixelPolish is a full-stack, AI-powered image enhancement web application. It empowers users to upload low-quality or noisy images and receive high-quality, professionally enhanced versions. With cutting-edge deep learning models, the platform offers intuitive, fast, and responsive tools that bring studio-level image upscaling and denoising to everyone.
 
-## 🧠 Purpose & Vision
+## Purpose & Vision
 
 PixelPolish aims to make professional image enhancement accessible to everyone via a clean and responsive web interface. Using deep learning models like Real-ESRGAN and DnCNN-B, it allows users to upscale and denoise images with minimal effort.
 
-## 🏗️ Architecture Overview
-
-### 📁 Folder Structure
-PixelPolish/
-├── frontend/       # React + Tailwind UI
-│   └── src/
-│       ├── components/   # Navbar, Home, Upload, Preview, etc.
-│       ├── assets/       # Logo, favicon, icons
-│       └── App.jsx / index.js
-├── backend/        # Node.js + Python hybrid backend
-│   ├── server.js          # Node server with Express & child_process
-│   ├── enhancer.py        # Python enhancer script
-│   └── weights/           # AI model weights
-│       ├── RealESRGAN_x4plus.pth
-│       └── dncnn_rgb.pth
-
-
----
-
-## 🧩 Core Features
+## Core Features
 
 ### 1. Image Upload
 - Drag & drop or file picker
@@ -52,7 +33,7 @@ PixelPolish/
 - Automatic format handling (JPG/PNG)
 - Fallback for upload or enhancement errors
 
-## 🧪 AI Models
+## AI Models
 
 ### 🔹 Real-ESRGAN
 - **File:** RealESRGAN_x4plus.pth
@@ -69,7 +50,7 @@ PixelPolish/
   - Framework: PyTorch
 
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### ⚙️ Backend
 - **Node.js** with **Express.js** for API and Python integration
@@ -78,12 +59,12 @@ PixelPolish/
 - **Pillow**, **OpenCV**, **torch** for image and model processing
 - **Multer**, **fs** for upload and file handling
 
-### 🎨 Frontend
+### Frontend
 - **React.js** with **Tailwind CSS** for sleek UI
 - **Framer Motion** for animations
 - **React Router** for navigation
 
-## 🔁 Flow of Operation
+## Flow of Operation
 
 1. User uploads image
 2. Frontend sends file to backend
@@ -94,3 +75,6 @@ PixelPolish/
 5. Enhanced image is returned to frontend
 6. User previews & downloads result
 
+Connect
+🌟 Star this repo to support the project
+🔗 LinkedIn: https://www.linkedin.com/in/adityarajsrv/
