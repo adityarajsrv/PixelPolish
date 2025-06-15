@@ -1,0 +1,10 @@
+basicsr==1.4.2
+fastapi==0.115.12
+lpips==0.1.4
+numpy==2.3.0
+opencv_python==4.11.0.86
+Pillow==11.2.1
+realesrgan==0.3.0
+skimage==0.0
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
