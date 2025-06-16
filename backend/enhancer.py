@@ -26,12 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cpu"  # Force CPU usage for Render's free tier
 logger.info(f"Using device: {device}")
 
 # Constants
-MAX_WIDTH, MAX_HEIGHT = 2048, 2048
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB limit
+MAX_WIDTH, MAX_HEIGHT = 512, 512  # Reduced to lower memory usage
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB limit (unchanged)
 FACE_DETECTION_THRESHOLD = 5 * 1024 * 1024  # 5MB threshold for face detection
 
 def load_realesrgan():
@@ -44,10 +44,10 @@ def load_realesrgan():
         scale=4,
         model_path="weights/RealESRGAN_x4plus.pth",
         model=model,
-        tile=400,
+        tile=100,  # Reduced to lower memory usage
         tile_pad=10,
         pre_pad=0,
-        half=True,
+        half=False,  # Disable FP16 on CPU
         device=device
     )
     return upscaler
@@ -55,8 +55,6 @@ def load_realesrgan():
 def load_dncnn():
     logger.info("Loading DnCNN model...")
     model = load_dncnn_model("weights/dncnn_rgb.pth", device)
-    if device == "cuda":
-        model = model.half()
     return model
 
 upscaler = load_realesrgan()
@@ -65,7 +63,7 @@ dncnn_model = load_dncnn()
 # Haar cascade for face detection
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-def denoise_with_tiling(model, img_t, tile=512, tile_pad=16):
+def denoise_with_tiling(model, img_t, tile=128, tile_pad=16):  # Reduced tile size
     logger.info(f"Denoising with tile size {tile}")
     b, c, h, w = img_t.size()
     output = torch.zeros_like(img_t)
@@ -102,11 +100,9 @@ def denoise_image_preserve_faces(pil_image, content_length, blend_ratio=0.3):
     orig_np = np.array(pil_image).astype(np.uint8)
     img = orig_np.astype(np.float32) / 255.0
     img_t = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).to(device)
-    if device == "cuda":
-        img_t = img_t.half()
 
     with torch.no_grad():
-        denoised = denoise_with_tiling(dncnn_model, img_t, tile=512, tile_pad=16)
+        denoised = denoise_with_tiling(dncnn_model, img_t, tile=128, tile_pad=16)
 
     denoised_np = denoised.squeeze(0).permute(1, 2, 0).cpu().numpy()
     denoised_img = (denoised_np * 255).astype(np.uint8)
@@ -124,7 +120,6 @@ def denoise_image_preserve_faces(pil_image, content_length, blend_ratio=0.3):
     else:
         logger.info("Skipping face detection due to large image size")
 
-    torch.cuda.empty_cache()
     return Image.fromarray(denoised_img)
 
 @app.get("/")
@@ -175,7 +170,6 @@ async def enhance_image_api(
         Image.fromarray(enhanced).save(buf, format="PNG")
         buf.seek(0)
         logger.info("Enhancement complete")
-        torch.cuda.empty_cache()
         return StreamingResponse(buf, media_type="image/png")
 
     except HTTPException:
