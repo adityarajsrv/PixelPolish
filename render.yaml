@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: pixelpolish-backend
+    name: PixelPolish
     env: python
     region: singapore
     plan: free
