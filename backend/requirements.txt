@@ -1,6 +1,9 @@
 basicsr==1.4.2
 fastapi==0.115.12
 numpy==1.26.4
-opencv_python==4.10.0.84
-Pillow==11.2.1
+opencv-python==4.10.0.84
+Pillow==10.4.0
 realesrgan==0.3.0
+uvicorn==0.32.0
+torch==1.13.1
+torchvision==0.14.1
