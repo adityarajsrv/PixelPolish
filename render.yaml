@@ -1,12 +1,8 @@
 services:
   - type: web
-    name: PixelPolish
+    name: imageenhancer-backend
     env: python
-    region: singapore
-    branch: main
-    rootDir: backend
-    plan: free
     buildCommand: pip install --no-cache-dir -r requirements.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
     startCommand: uvicorn enhancer:app --host 0.0.0.0 --port 10000
-    healthCheckPath: /
-    autoDeploy: true
+    rootDir: backend
+    pythonVersion: 3.10.13
