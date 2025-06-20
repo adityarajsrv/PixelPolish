@@ -16,9 +16,11 @@ from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
 from dncnn_model import load_dncnn_model
 
+# Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+# Lifespan context manager for startup/shutdown events
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
@@ -26,6 +28,7 @@ async def lifespan(app: FastAPI):
     load_dncnn()
     logger.info("Application startup complete with models loaded")
     yield
+    # Shutdown logic (if needed)
     logger.info("Application shutdown")
 
 app = FastAPI(lifespan=lifespan)
@@ -38,16 +41,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Use Render's PORT environment variable or default to 10000
 PORT = int(os.getenv("PORT", 10000))
-device = "cpu" 
+device = "cpu"  # Force CPU usage for Render's free tier
 logger.info(f"Using device: {device} on port {PORT}")
 
-MAX_PROCESSING_SIZE = (256, 256)  
-MAX_FILE_SIZE = 10 * 1024 * 1024  
-FACE_DETECTION_THRESHOLD = 5 * 1024 * 1024  
+# Constants
+MAX_PROCESSING_SIZE = (256, 256)  # Reduced to 256x256 to stay within 512MB
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB limit
+FACE_DETECTION_THRESHOLD = 5 * 1024 * 1024  # 5MB threshold for face detection
 MAX_WIDTH, MAX_HEIGHT = MAX_PROCESSING_SIZE
-MAX_PROCESSING_TIME = 240  
+MAX_PROCESSING_TIME = 300  # Increased to 5 minutes (300 seconds) to match 2-5 min goal
 
+# Global models and lock
 upscaler = None
 dncnn_model = None
 processing_lock = threading.Lock()
@@ -61,13 +67,13 @@ def load_realesrgan():
             num_block=23, num_grow_ch=32, scale=4
         )
         upscaler = RealESRGANer(
-            scale=1,  
+            scale=2,  # Reverted to 2 for stability
             model_path="weights/RealESRGAN_x4plus.pth",
             model=model,
-            tile=200,  
-            tile_pad=20,  
+            tile=150,  # Adjusted to a middle ground between 100 and 200
+            tile_pad=15,  # Adjusted for balance
             pre_pad=0,
-            half=False,  
+            half=False,  # Disable FP16 on CPU
             device=device
         )
     return upscaler
@@ -79,6 +85,7 @@ def load_dncnn():
         dncnn_model = load_dncnn_model("weights/dncnn_rgb.pth", device)
     return dncnn_model
 
+# Haar cascade for face detection
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 def denoise_with_tiling(model, img_t, tile=64, tile_pad=8):
@@ -162,10 +169,12 @@ async def enhance_image_api(
                     detail="Image size exceeds 10MB. Please upload a smaller image."
                 )
 
+            # Handle EXIF orientation
             pil_image = Image.open(io.BytesIO(contents)).convert("RGB")
             pil_image = ImageOps.exif_transpose(pil_image)
             logger.info(f"Original dimensions: {pil_image.width}x{pil_image.height}")
 
+            # Resize if needed
             if pil_image.width > MAX_WIDTH or pil_image.height > MAX_HEIGHT:
                 logger.info(f"Image exceeds max dimensions: {MAX_WIDTH}x{MAX_HEIGHT}")
                 if resize:
@@ -182,9 +191,10 @@ async def enhance_image_api(
 
             denoised_img = denoise_image_preserve_faces(pil_image, content_length)
             logger.info("Enhancing image with RealESRGAN...")
+            # Add timeout for enhance call (5 minutes max)
             loop = asyncio.get_running_loop()
             enhanced, _ = await asyncio.wait_for(
-                loop.run_in_executor(None, lambda: upscaler.enhance(np.array(denoised_img), outscale=1)),
+                loop.run_in_executor(None, lambda: upscaler.enhance(np.array(denoised_img), outscale=2)),
                 timeout=MAX_PROCESSING_TIME
             )
             logger.info(f"Enhanced dimensions: {enhanced.shape[1]}x{enhanced.shape[0]}")
