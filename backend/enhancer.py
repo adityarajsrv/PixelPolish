@@ -12,10 +12,6 @@ import threading
 import os
 import asyncio
 
-from basicsr.archs.rrdbnet_arch import RRDBNet
-from realesrgan import RealESRGANer
-from dncnn_model import load_dncnn_model
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -51,7 +47,7 @@ MAX_PROCESSING_SIZE = (256, 256)  # Reduced to 256x256 to stay within 512MB
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB limit
 FACE_DETECTION_THRESHOLD = 5 * 1024 * 1024  # 5MB threshold for face detection
 MAX_WIDTH, MAX_HEIGHT = MAX_PROCESSING_SIZE
-MAX_PROCESSING_TIME = 300  # Increased to 5 minutes (300 seconds) to match 2-5 min goal
+MAX_PROCESSING_TIME = 360  # 6 minutes
 
 # Global models and lock
 upscaler = None
@@ -67,13 +63,13 @@ def load_realesrgan():
             num_block=23, num_grow_ch=32, scale=4
         )
         upscaler = RealESRGANer(
-            scale=2,  # Reverted to 2 for stability
+            scale=1,  # Reduced to 1 for lower memory usage
             model_path="weights/RealESRGAN_x4plus.pth",
             model=model,
-            tile=150,  # Adjusted to a middle ground between 100 and 200
-            tile_pad=15,  # Adjusted for balance
+            tile=100,  # Reduced to 100 to balance speed and memory
+            tile_pad=10,
             pre_pad=0,
-            half=False,  # Disable FP16 on CPU
+            half=False,
             device=device
         )
     return upscaler
@@ -190,14 +186,14 @@ async def enhance_image_api(
                     )
 
             denoised_img = denoise_image_preserve_faces(pil_image, content_length)
-            logger.info("Enhancing image with RealESRGAN...")
-            # Add timeout for enhance call (5 minutes max)
+            logger.info("Enhancing image with RealESRGAN... Starting enhance call")
+            # Add timeout for enhance call (6 minutes max)
             loop = asyncio.get_running_loop()
             enhanced, _ = await asyncio.wait_for(
-                loop.run_in_executor(None, lambda: upscaler.enhance(np.array(denoised_img), outscale=2)),
+                loop.run_in_executor(None, lambda: upscaler.enhance(np.array(denoised_img), outscale=1)),
                 timeout=MAX_PROCESSING_TIME
             )
-            logger.info(f"Enhanced dimensions: {enhanced.shape[1]}x{enhanced.shape[0]}")
+            logger.info(f"Enhance call completed. Enhanced dimensions: {enhanced.shape[1]}x{enhanced.shape[0]}")
 
             buf = io.BytesIO()
             Image.fromarray(enhanced).save(buf, format="PNG")
