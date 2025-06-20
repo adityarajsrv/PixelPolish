@@ -10,6 +10,7 @@ import cv2
 import logging
 import threading
 import os
+import asyncio
 
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Startup logic
     load_realesrgan()
     load_dncnn()
     logger.info("Application startup complete with models loaded")
@@ -37,14 +39,14 @@ app.add_middleware(
 )
 
 PORT = int(os.getenv("PORT", 10000))
-device = "cpu"  
+device = "cpu" 
 logger.info(f"Using device: {device} on port {PORT}")
 
 MAX_PROCESSING_SIZE = (256, 256)  
 MAX_FILE_SIZE = 10 * 1024 * 1024  
 FACE_DETECTION_THRESHOLD = 5 * 1024 * 1024  
-MAX_WIDTH, MAX_HEIGHT = MAX_PROCESSING_SIZE  
-
+MAX_WIDTH, MAX_HEIGHT = MAX_PROCESSING_SIZE
+MAX_PROCESSING_TIME = 240  
 
 upscaler = None
 dncnn_model = None
@@ -59,11 +61,11 @@ def load_realesrgan():
             num_block=23, num_grow_ch=32, scale=4
         )
         upscaler = RealESRGANer(
-            scale=2,  
+            scale=1,  
             model_path="weights/RealESRGAN_x4plus.pth",
             model=model,
-            tile=50,  
-            tile_pad=5,
+            tile=200,  
+            tile_pad=20,  
             pre_pad=0,
             half=False,  
             device=device
@@ -79,7 +81,7 @@ def load_dncnn():
 
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-def denoise_with_tiling(model, img_t, tile=64, tile_pad=8):  
+def denoise_with_tiling(model, img_t, tile=64, tile_pad=8):
     logger.info(f"Denoising with tile size {tile}")
     b, c, h, w = img_t.size()
     output = torch.zeros_like(img_t)
@@ -161,7 +163,7 @@ async def enhance_image_api(
                 )
 
             pil_image = Image.open(io.BytesIO(contents)).convert("RGB")
-            pil_image = ImageOps.exif_transpose(pil_image)  
+            pil_image = ImageOps.exif_transpose(pil_image)
             logger.info(f"Original dimensions: {pil_image.width}x{pil_image.height}")
 
             if pil_image.width > MAX_WIDTH or pil_image.height > MAX_HEIGHT:
@@ -180,7 +182,11 @@ async def enhance_image_api(
 
             denoised_img = denoise_image_preserve_faces(pil_image, content_length)
             logger.info("Enhancing image with RealESRGAN...")
-            enhanced, _ = upscaler.enhance(np.array(denoised_img), outscale=2)  
+            loop = asyncio.get_running_loop()
+            enhanced, _ = await asyncio.wait_for(
+                loop.run_in_executor(None, lambda: upscaler.enhance(np.array(denoised_img), outscale=1)),
+                timeout=MAX_PROCESSING_TIME
+            )
             logger.info(f"Enhanced dimensions: {enhanced.shape[1]}x{enhanced.shape[0]}")
 
             buf = io.BytesIO()
@@ -192,6 +198,9 @@ async def enhance_image_api(
 
         except HTTPException:
             raise
+        except asyncio.TimeoutError:
+            logger.error(f"Enhancement timed out after {MAX_PROCESSING_TIME} seconds")
+            raise HTTPException(status_code=504, detail=f"Enhancement timed out after {MAX_PROCESSING_TIME} seconds")
         except Exception as e:
             logger.error(f"Enhancement failed: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Enhancement failed: {str(e)}")
