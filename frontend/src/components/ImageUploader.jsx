@@ -28,6 +28,7 @@ const ImageUploader = () => {
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [showCropper, setShowCropper] = useState(false);
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
   const [notification, setNotification] = useState({
     show: false,
     type: "",
@@ -1003,24 +1004,46 @@ const ImageUploader = () => {
           </motion.div>
         )}
       </div>
-      <div className="max-w-7xl mx-auto mt- px-4 sm:px-6 md:px-8 lg:px-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 mt-6">
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 p-4 rounded-lg shadow-sm text-sm sm:text-base">
           <p>
             <strong>Note:</strong> Due to limitations on free-tier hosting
             services, real-time enhancement functionality is disabled in this
             deployment. However, you can{" "}
-            <a
-              href="https://drive.google.com/drive/folders/1yFFsintX4l92OUYNgJYlG5zU53pJf0kF?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setShowVideoPopup(true)}
               className="underline font-medium hover:text-yellow-700"
             >
               watch a recorded demo
-            </a>{" "}
+            </button>{" "}
             showcasing the full features of PixelPolish in action.
           </p>
         </div>
       </div>
+      {showVideoPopup && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg overflow-hidden shadow-2xl max-w-3xl w-full relative">
+            <div className="flex justify-end p-2">
+              <button
+                onClick={() => setShowVideoPopup(false)}
+                className="text-gray-600 hover:text-black text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <div className="aspect-w-16 aspect-h-9">
+              <iframe
+                className="w-full h-[400px] sm:h-[500px]"
+                src="https://www.youtube.com/embed/kbG8f5KqmBc"
+                title="PixelPolish Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
