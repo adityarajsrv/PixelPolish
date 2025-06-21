@@ -294,7 +294,8 @@ const ImageUploader = () => {
     });
 
     try {
-      const res = await fetch(`http://localhost:1000/api/enhance?${params.toString()}`,
+      const res = await fetch(
+        `http://localhost:1000/api/enhance?${params.toString()}`,
         {
           method: "POST",
           body: formData,
@@ -319,7 +320,7 @@ const ImageUploader = () => {
       setLoading(false);
     }
   };
-  
+
   const handleTryAnother = () => window.location.reload();
 
   const handleDownload = () => {
@@ -1001,6 +1002,24 @@ const ImageUploader = () => {
             </motion.div>
           </motion.div>
         )}
+      </div>
+      <div className="max-w-7xl mx-auto mt- px-4 sm:px-6 md:px-8 lg:px-10">
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 p-4 rounded-lg shadow-sm text-sm sm:text-base">
+          <p>
+            <strong>Note:</strong> Due to limitations on free-tier hosting
+            services, real-time enhancement functionality is disabled in this
+            deployment. However, you can{" "}
+            <a
+              href="https://drive.google.com/drive/folders/1yFFsintX4l92OUYNgJYlG5zU53pJf0kF?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-medium hover:text-yellow-700"
+            >
+              watch a recorded demo
+            </a>{" "}
+            showcasing the full features of PixelPolish in action.
+          </p>
+        </div>
       </div>
     </div>
   );

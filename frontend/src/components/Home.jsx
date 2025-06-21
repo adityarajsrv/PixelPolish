@@ -97,7 +97,7 @@ const Home = () => {
               />
             </div>
           </div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="max-w-7xl mx-auto mt- px-4 sm:px-6 md:px-8 lg:px-10">
             <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 p-4 rounded-lg shadow-sm text-sm sm:text-base">
               <p>
                 <strong>Note:</strong> Due to limitations on free-tier hosting
