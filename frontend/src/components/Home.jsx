@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom"; 
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import About from "./About";
 import Features from "./Features";
@@ -41,7 +41,7 @@ const Home = () => {
     setLoading(true);
     setTimeout(() => {
       navigate("/enhancer");
-    }, 500); 
+    }, 500);
   };
 
   return (
@@ -65,7 +65,6 @@ const Home = () => {
           style={{ scaleX }}
         />
         <Navbar />
-
         <section
           id="home"
           className="pt-12 pb-4 sm:pt-16 sm:pb-8 md:pt-20 md:pb-10 px-4 sm:px-6 md:px-8 lg:px-10 bg-gradient-to-r from-indigo-50 to-fuchsia-50 backdrop-blur-md"
@@ -98,17 +97,44 @@ const Home = () => {
               />
             </div>
           </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 p-4 rounded-lg shadow-sm text-sm sm:text-base">
+              <p>
+                <strong>Note:</strong> Due to limitations on free-tier hosting
+                services, real-time enhancement functionality is disabled in
+                this deployment. However, you can{" "}
+                <a
+                  href="https://drive.google.com/drive/folders/1yFFsintX4l92OUYNgJYlG5zU53pJf0kF?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline font-medium hover:text-yellow-700"
+                >
+                  watch a recorded demo
+                </a>{" "}
+                showcasing the full features of PixelPolish in action.
+              </p>
+            </div>
+          </div>
         </section>
-
-        <section id="about" className="pt-0 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-r from-indigo-50 to-fuchsia-50">
+        <section
+          id="about"
+          className="pt-0 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-r from-indigo-50 to-fuchsia-50"
+        >
           <About />
         </section>
 
-        <section id="features" className="pt-0 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-r from-indigo-50 to-fuchsia-50">
+        <section
+          id="features"
+          className="pt-0 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-r from-indigo-50 to-fuchsia-50"
+        >
           <Features />
         </section>
 
-        <Footer setShowSuccessPopup={setShowSuccessPopup} handleTryNow={handleTryNow} className="bg-gradient-to-r from-indigo-50 to-fuchsia-50" />
+        <Footer
+          setShowSuccessPopup={setShowSuccessPopup}
+          handleTryNow={handleTryNow}
+          className="bg-gradient-to-r from-indigo-50 to-fuchsia-50"
+        />
       </motion.div>
 
       {showSuccessPopup && (
