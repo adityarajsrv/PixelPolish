@@ -119,7 +119,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
             ></textarea>
             <button
               type="submit"
-              className="bg-violet-700 text-white px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md hover:bg-violet-800 hover:scale-105 transition-transform"
+              className=" cursor-pointer bg-violet-700 text-white px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md hover:bg-violet-800 hover:scale-105 transition-transform"
             >
               Send
             </button>
@@ -158,7 +158,7 @@ const Footer = ({ setShowSuccessPopup, handleTryNow }) => {
           <p className="text-gray-300 text-xs sm:text-sm mb-2">
             Email:{" "}
             <a
-              className="hover:text-fuchsia-400 transition"
+              className="hover:text-fuchsia-400 transition cursor-pointer"
             >
               support@pixelpolish.com
             </a>

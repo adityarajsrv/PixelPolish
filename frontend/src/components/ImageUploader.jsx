@@ -28,8 +28,12 @@ const ImageUploader = () => {
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [showCropper, setShowCropper] = useState(false);
-  const [notification, setNotification] = useState({ show: false, type: "", message: "" });
-  const [downloadFormat, setDownloadFormat] = useState("png"); 
+  const [notification, setNotification] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+  const [downloadFormat, setDownloadFormat] = useState("png");
   const fileInputRef = useRef(null);
   const dropZoneRef = useRef(null);
   const canvasRef = useRef(null);
@@ -128,17 +132,29 @@ const ImageUploader = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    dropZoneRef.current.classList.add("border-fuchsia-500", "bg-indigo-50", "scale-105");
+    dropZoneRef.current.classList.add(
+      "border-fuchsia-500",
+      "bg-indigo-50",
+      "scale-105"
+    );
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
-    dropZoneRef.current.classList.remove("border-fuchsia-500", "bg-indigo-50", "scale-105");
+    dropZoneRef.current.classList.remove(
+      "border-fuchsia-500",
+      "bg-indigo-50",
+      "scale-105"
+    );
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    dropZoneRef.current.classList.remove("border-fuchsia-500", "bg-indigo-50", "scale-105");
+    dropZoneRef.current.classList.remove(
+      "border-fuchsia-500",
+      "bg-indigo-50",
+      "scale-105"
+    );
     const file = e.dataTransfer.files[0];
     if (!file) return;
 
@@ -177,7 +193,9 @@ const ImageUploader = () => {
     fetch(editedImageRef.current)
       .then((res) => res.blob())
       .then((blob) => {
-        const file = new File([blob], "edited_image.png", { type: "image/png" });
+        const file = new File([blob], "edited_image.png", {
+          type: "image/png",
+        });
         setSelectedFile(file);
         setSelectedFileURL(editedImageRef.current);
         setNotification({
@@ -207,7 +225,9 @@ const ImageUploader = () => {
       fetch(croppedImage)
         .then((res) => res.blob())
         .then((blob) => {
-          const file = new File([blob], "cropped_image.png", { type: "image/png" });
+          const file = new File([blob], "cropped_image.png", {
+            type: "image/png",
+          });
           setSelectedFile(file);
           setSelectedFileURL(croppedImage);
           setShowCropper(false);
@@ -274,10 +294,12 @@ const ImageUploader = () => {
     });
 
     try {
-      const res = await fetch(`http://localhost:1000/api/enhance?${params.toString()}`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(`http://localhost:1000/api/enhance?${params.toString()}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Enhancement failed");
@@ -297,7 +319,7 @@ const ImageUploader = () => {
       setLoading(false);
     }
   };
-
+  
   const handleTryAnother = () => window.location.reload();
 
   const handleDownload = () => {
@@ -331,7 +353,10 @@ const ImageUploader = () => {
       } else {
         const mimeType = downloadFormat === "jpeg" ? "image/jpeg" : "image/png";
         const extension = downloadFormat === "jpeg" ? "jpg" : "png";
-        const dataUrl = canvas.toDataURL(mimeType, downloadFormat === "jpeg" ? 0.9 : 1.0);
+        const dataUrl = canvas.toDataURL(
+          mimeType,
+          downloadFormat === "jpeg" ? 0.9 : 1.0
+        );
         const link = document.createElement("a");
         link.href = dataUrl;
         link.download = `enhanced_image.${extension}`;
@@ -371,7 +396,9 @@ const ImageUploader = () => {
             <div className="flex items-center">
               <span>{notification.message}</span>
               <button
-                onClick={() => setNotification({ show: false, type: "", message: "" })}
+                onClick={() =>
+                  setNotification({ show: false, type: "", message: "" })
+                }
                 className="ml-4 text-white hover:text-gray-200"
                 aria-label="Close notification"
               >
@@ -398,7 +425,8 @@ const ImageUploader = () => {
               className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 md:mb-10 leading-relaxed"
               variants={fadeInUp}
             >
-              Enhance your photos effortlessly. Upload or drag and drop to start! (Max size: 10MB, Max dimensions: 2048x2048)
+              Enhance your photos effortlessly. Upload or drag and drop to
+              start! (Max size: 10MB, Max dimensions: 2048x2048)
             </motion.p>
             <motion.div
               ref={dropZoneRef}
@@ -426,8 +454,12 @@ const ImageUploader = () => {
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   />
                 </motion.svg>
-                <p className="text-base sm:text-lg text-gray-600 mb-2 sm:mb-3">Drag & Drop your image here</p>
-                <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">or</p>
+                <p className="text-base sm:text-lg text-gray-600 mb-2 sm:mb-3">
+                  Drag & Drop your image here
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
+                  or
+                </p>
                 <motion.label
                   htmlFor="file-upload"
                   className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-full cursor-pointer shadow-lg text-sm sm:text-base"
@@ -466,7 +498,8 @@ const ImageUploader = () => {
               className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 md:mb-10 leading-relaxed"
               variants={fadeInUp}
             >
-              Your image is set! Edit it below or click to enhance with AI-powered magic.
+              Your image is set! Edit it below or click to enhance with
+              AI-powered magic.
             </motion.p>
             {resizeWarning && (
               <motion.p
@@ -491,11 +524,16 @@ const ImageUploader = () => {
               className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg mb-6"
               variants={fadeInUp}
             >
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Edit Image</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+                Edit Image
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Rotation */}
                 <div>
-                  <label className="block text-sm sm:text-base text-gray-700 mb-2" htmlFor="rotation">
+                  <label
+                    className="block text-sm sm:text-base text-gray-700 mb-2"
+                    htmlFor="rotation"
+                  >
                     Rotation: {rotation}°
                   </label>
                   <input
@@ -525,7 +563,10 @@ const ImageUploader = () => {
                 </div>
                 {/* Brightness */}
                 <div>
-                  <label className="block text-sm sm:text-base text-gray-700 mb-2" htmlFor="brightness">
+                  <label
+                    className="block text-sm sm:text-base text-gray-700 mb-2"
+                    htmlFor="brightness"
+                  >
                     Brightness: {brightness}%
                   </label>
                   <input
@@ -541,7 +582,10 @@ const ImageUploader = () => {
                 </div>
                 {/* Contrast */}
                 <div>
-                  <label className="block text-sm sm:text-base text-gray-700 mb-2" htmlFor="contrast">
+                  <label
+                    className="block text-sm sm:text-base text-gray-700 mb-2"
+                    htmlFor="contrast"
+                  >
                     Contrast: {contrast}%
                   </label>
                   <input
@@ -557,7 +601,9 @@ const ImageUploader = () => {
                 </div>
                 {/* Crop */}
                 <div>
-                  <label className="block text-sm sm:text-base text-gray-700 mb-2">Crop</label>
+                  <label className="block text-sm sm:text-base text-gray-700 mb-2">
+                    Crop
+                  </label>
                   <button
                     onClick={initiateCrop}
                     className="px-3 py-1 bg-violet-600 text-white rounded-full text-sm"
@@ -617,7 +663,14 @@ const ImageUploader = () => {
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -649,10 +702,7 @@ const ImageUploader = () => {
                 Compare Your Images
               </motion.h2>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 items-center">
-                <motion.div
-                  className="flex items-center"
-                  variants={fadeInUp}
-                >
+                <motion.div className="flex items-center" variants={fadeInUp}>
                   <select
                     value={downloadFormat}
                     onChange={(e) => setDownloadFormat(e.target.value)}
@@ -737,9 +787,7 @@ const ImageUploader = () => {
 
         {showOriginalPreview && selectedFileURL && (
           <motion.div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <motion.div
-              className="relative bg-white rounded-2xl p-4 sm:p-6 md:p-8 max-w-[90vw] w-full mx-2 sm:mx-4 max-h-[90vh] overflow-auto"
-            >
+            <motion.div className="relative bg-white rounded-2xl p-4 sm:p-6 md:p-8 max-w-[90vw] w-full mx-2 sm:mx-4 max-h-[90vh] overflow-auto">
               <motion.button
                 onClick={() => setShowOriginalPreview(false)}
                 className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white border border-black p-1 sm:p-2 rounded-full shadow-lg hover:bg-gray-100"
@@ -762,9 +810,7 @@ const ImageUploader = () => {
 
         {showEnhancedPreview && enhancedImage && (
           <motion.div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <motion.div
-              className="relative bg-white rounded-2xl p-4 sm:p-6 md:p-8 max-w-[90vw] w-full mx-2 sm:mx-4 max-h-[90vh] overflow-auto"
-            >
+            <motion.div className="relative bg-white rounded-2xl p-4 sm:p-6 md:p-8 max-w-[90vw] w-full mx-2 sm:mx-4 max-h-[90vh] overflow-auto">
               <motion.button
                 onClick={() => setShowEnhancedPreview(false)}
                 className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white border border-black p-1 sm:p-2 rounded-full shadow-lg hover:bg-gray-100"
@@ -809,7 +855,8 @@ const ImageUploader = () => {
                 Image Size Too Large
               </h3>
               <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">
-                The selected image exceeds the maximum size limit of 10MB. Please try uploading a smaller image.
+                The selected image exceeds the maximum size limit of 10MB.
+                Please try uploading a smaller image.
               </p>
               <motion.button
                 onClick={() => setShowSizeError(false)}
@@ -843,8 +890,12 @@ const ImageUploader = () => {
               >
                 <i className="ri-close-line text-red-700 text-xl sm:text-2xl"></i>
               </motion.button>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Error</h3>
-              <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">{errorMessage}</p>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+                Error
+              </h3>
+              <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">
+                {errorMessage}
+              </p>
               <motion.button
                 onClick={() => setErrorMessage("")}
                 className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-full shadow-lg text-sm sm:text-base"
@@ -880,7 +931,9 @@ const ImageUploader = () => {
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 Resize Warning
               </h3>
-              <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">{resizeWarning}</p>
+              <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">
+                {resizeWarning}
+              </p>
               <motion.button
                 onClick={() => setResizeWarning("")}
                 className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-full shadow-lg text-sm sm:text-base"
@@ -913,7 +966,9 @@ const ImageUploader = () => {
               >
                 <i className="ri-close-line text-gray-700 text-xl sm:text-2xl"></i>
               </motion.button>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Crop Image</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+                Crop Image
+              </h3>
               <Cropper
                 src={selectedFileURL}
                 style={{ height: 400, width: 400 }}

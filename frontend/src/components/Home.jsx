@@ -83,7 +83,7 @@ const Home = () => {
               <div className="flex justify-center lg:justify-start space-x-4">
                 <button
                   onClick={handleTryNow}
-                  className="inline-block bg-violet-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold shadow-lg text-base sm:text-lg hover:bg-violet-800 hover:scale-105 transition-transform"
+                  className="cursor-pointer inline-block bg-violet-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold shadow-lg text-base sm:text-lg hover:bg-violet-800 hover:scale-105 transition-transform"
                 >
                   Try It Now
                 </button>
